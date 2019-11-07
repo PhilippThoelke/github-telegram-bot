@@ -102,3 +102,9 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# folder with downloaded repositories
+repositories
+
+# GitHub credentials file
+.credentials
