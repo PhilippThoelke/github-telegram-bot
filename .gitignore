@@ -108,3 +108,12 @@ repositories
 
 # GitHub credentials file
 .credentials
+
+# file containing information needed by the bot
+.meta
+
+# password file for the bot
+.password
+
+# token file for the bot
+.bot_token
