@@ -1,6 +1,7 @@
 import os
 import glob
 import time
+import base64
 import pickle
 import requests
 import github_api as github
@@ -56,8 +57,8 @@ else:
 password = None
 if os.path.exists(PASSWORD_FILE):
     # load password from the .password file if it exists
-    with open(PASSWORD_FILE, 'r') as password_file:
-        password = password_file.read()
+    encoded = pickle.load(open(PASSWORD_FILE, 'rb'))
+    password = str(base64.b64decode(encoded), encoding='utf-8')
 
 # the bot's update loop
 while True:
@@ -102,10 +103,10 @@ while True:
                     meta['password_requested'].append(user_id)
                     update_meta_file(meta)
 
-            if message['text'].startswith('/'):
+            if message['text'].startswith('/') and user_id not in meta['password_requested']:
                 command = message['text'][1:].split(' ')
                 if command[0] == 'start':
-                    send_message('Welcome!')
+                    send_message(chat_id, 'Welcome!')
                 elif command[0] == 'list':
                     if '-a' in command:
                     	repos = github.list_repos(modifier='all')
