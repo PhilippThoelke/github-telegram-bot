@@ -171,6 +171,44 @@ while True:
                             os.chdir(os.path.join('..', '..'))
                         else:
                             send_message(chat_id, 'The specified repository is not installed. You can list installed repositories with the /installed command or clone repositories with /clone.')
+                elif command[0] == 'listpython':
+                    if len(command) < 2:
+                        send_message(chat_id, 'Please specify a repository. You can list installed repositories with the /installed command.')
+                    elif command[1] in github.list_repos(modifier='all'):
+                        paths = glob.glob(os.path.join(REPOSITORY_FOLDER, command[1], '*.py'))
+                        files = [path.split(os.sep)[-1] for path in paths]
+                        send_message(chat_id, f'The available python files in repository {command[1]} are:\n' + '\n'.join(files))
+                    else:
+                        send_message(chat_id, 'Repository not installed. You can check installed repositories with the /installed command.')
+                elif command[0] == 'python':
+                    if len(command) < 3:
+                        send_message(chat_id, 'Please specify a repository and a python file to run. You can list installed repositories with the /installed command and list python files in repositories with /listpython <repository>.')
+                    elif command[1] in github.list_repos(modifier='all'):
+                        paths = glob.glob(os.path.join(REPOSITORY_FOLDER, command[1], command[2]))
+                        if len(paths) == 0:
+                            send_message(chat_id, f'The file {command[2]} was not found in repository {command[1]}. You can list all python files with the command /listpython {command[1]}')
+                        else:
+                            output_file = os.path.join(*paths[0].split(os.sep)[:-1] + ['output.zip'])
+                            os.system(f'python {paths[0]} 1> {output_file} 2>&1')
+                            send_message(chat_id, f'Running file {command[2]}! You can check its output with /output {command[1]}')
+                    else:
+                        send_message(chat_id, 'Repository not installed. You can check installed repositories with the /installed command.')
+                elif command[0] == 'output':
+                    if len(command) < 2:
+                        send_message(chat_id, 'Please specify a repository to show the output of. You can list installed repositories with the /installed command.')
+                    elif os.path.exists(os.path.join(REPOSITORY_FOLDER, command[1])):
+                        path = glob.glob(os.path.join(REPOSITORY_FOLDER, command[1], 'output.txt'))
+                        if len(path) == 0:
+                            send_message(chat_id, f'No output file found in repository {command[1]}')
+                        else:
+                            with open(path[0], 'r') as output_file:
+                                contents = '\n'.join(output_file.readlines())
+                            send_message(chat_id, contents)
+                    else:
+                        send_message(chat_id, f'Repository {command[1]} not found. You can check installed repositories with the /installed command.')
+                elif command[0] == 'reboot':
+                    send_message(chat_id, 'Rebooting...')
+                    os.system('reboot')
                 else:
                     send_message(chat_id, 'Unknown command.')
 
