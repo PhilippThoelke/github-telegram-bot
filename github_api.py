@@ -1,4 +1,6 @@
 import os
+import base64
+import pickle
 from github import Github
 
 CREDENTIALS_FILE = '.credentials'
@@ -9,8 +11,9 @@ REPOSITORY_NOT_FOUND_ERR = -3
 
 def get_credentials():
     if os.path.exists(CREDENTIALS_FILE):
-        with open(CREDENTIALS_FILE, 'r') as credentials_file:
-            return [line.strip() for line in credentials_file.readlines()]
+        encoded = pickle.load(open(CREDENTIALS_FILE, 'rb'))
+        credentials = base64.b64decode(encoded)
+        return str(credentials, encoding='utf-8').split('\n')
     return None
 
 def start_session():
