@@ -203,12 +203,12 @@ while True:
                         send_message(chat_id, f'Repository {command[1]} not found. You can check installed repositories with the /installed command.')
                 elif command[0] == 'reboot':
                     send_message(chat_id, 'Rebooting...')
-                    os.system('reboot')
+                    os.system('sudo reboot')
                 elif command[0] == 'update':
                     send_message(chat_id, 'Updating...')
                     os.system('git pull')
                     send_message(chat_id, 'Done! Rebooting...')
-                    os.system('reboot')
+                    os.system('sudo reboot')
                 else:
                     send_message(chat_id, 'Unknown command.')
 
