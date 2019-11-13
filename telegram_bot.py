@@ -10,6 +10,9 @@ import config_parser as parser
 META_FILE = '.meta'
 REPOSITORY_FOLDER = 'repositories'
 
+# change python directory to the local directory
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
 token = parser.get_value(parser.TOKEN)
 if token is None:
     print('The .token file is missing. Add it to the local directory and add the bot token from Telegram.')
