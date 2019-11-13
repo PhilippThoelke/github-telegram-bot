@@ -116,4 +116,4 @@ repositories
 .password
 
 # token file for the bot
-.bot_token
+.token
