@@ -8,13 +8,11 @@ import github_api as github
 import config_parser as parser
 
 META_FILE = '.meta'
-PASSWORD_FILE = '.password'
-TOKEN_FILE = '.bot_token'
 REPOSITORY_FOLDER = 'repositories'
 
 token = parser.get_value(parser.TOKEN)
 if token is None:
-    print('The .bot_token file is missing. Add it to the local directory and add the bot token from Telegram.')
+    print('The .token file is missing. Add it to the local directory and add the bot token from Telegram.')
     exit(1)
 
 URL = f'https://api.telegram.org/bot{token}'
