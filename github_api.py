@@ -2,6 +2,7 @@ import os
 import base64
 import pickle
 from github import Github
+import config_parser as parser
 
 CREDENTIALS_FILE = '.credentials'
 
@@ -9,18 +10,10 @@ CREDENTIALS_FILE_MISSING_ERR = -1
 UNKNOWN_MODIFIER_ERR = -2
 REPOSITORY_NOT_FOUND_ERR = -3
 
-def get_credentials():
-    if os.path.exists(CREDENTIALS_FILE):
-        encoded = pickle.load(open(CREDENTIALS_FILE, 'rb'))
-        credentials = base64.b64decode(encoded)
-        return str(credentials, encoding='utf-8').split('\n')
-    return None
-
 def start_session():
-    credentials = get_credentials()
+    credentials = parser.get_value(parser.CREDENTIALS)
     if credentials is None:
         return CREDENTIALS_FILE_MISSING_ERR
-
     return Github(credentials[0], credentials[1])
 
 def list_repos(modifier='public', session=None):

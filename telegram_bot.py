@@ -5,17 +5,15 @@ import base64
 import pickle
 import requests
 import github_api as github
+import config_parser as parser
 
 META_FILE = '.meta'
 PASSWORD_FILE = '.password'
 TOKEN_FILE = '.bot_token'
 REPOSITORY_FOLDER = 'repositories'
 
-if os.path.exists(TOKEN_FILE):
-    # load bot token from the .bot_token file if it exists
-    with open(TOKEN_FILE, 'r') as token_file:
-        token = token_file.read()
-else:
+token = parser.get_value(parser.TOKEN)
+if token is None:
     print('The .bot_token file is missing. Add it to the local directory and add the bot token from Telegram.')
     exit(1)
 
@@ -54,11 +52,7 @@ else:
     with open(META_FILE, 'wb') as meta_file:
         pickle.dump(meta, meta_file)
 
-password = None
-if os.path.exists(PASSWORD_FILE):
-    # load password from the .password file if it exists
-    encoded = pickle.load(open(PASSWORD_FILE, 'rb'))
-    password = str(base64.b64decode(encoded), encoding='utf-8')
+password = parser.get_value(parser.PASSWORD)
 
 # the bot's update loop
 while True:
