@@ -204,6 +204,11 @@ while True:
                 elif command[0] == 'reboot':
                     send_message(chat_id, 'Rebooting...')
                     os.system('reboot')
+                elif command[0] == 'update':
+                    send_message(chat_id, 'Updating...')
+                    os.system('git pull')
+                    send_message(chat_id, 'Done! Rebooting...')
+                    os.system('reboot')
                 else:
                     send_message(chat_id, 'Unknown command.')
 
