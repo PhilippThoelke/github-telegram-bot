@@ -22,6 +22,8 @@ URL = f'https://api.telegram.org/bot{token}'
 
 MISSING_PASSWORD_STR = 'The server is missing the password file.\nPlease create a file called .password in the server\'s main directory, containing the password to log in to the bot.'
 
+HELP_MESSAGE = 'All available commands:\n/start\n/list [-a] [-p]\n/clone <repo>\n/remove <repo>\n/installed\n/pull <repo>\n/listpython <repo>\n/python <repo> <fil>\n/output <repo>\n/reboot\n/update\n/help'
+
 
 def send_message(chat_id, text):
     url = URL + f'/sendMessage?chat_id={chat_id}&text={text}'
@@ -210,6 +212,8 @@ while True:
                     os.system('git pull')
                     send_message(chat_id, 'Done! Rebooting...')
                     os.system('sudo reboot')
+                elif command[0] == 'help':
+                    send_message(chat_id, HELP_MESSAGE)
                 else:
                     send_message(chat_id, 'Unknown command.')
 
