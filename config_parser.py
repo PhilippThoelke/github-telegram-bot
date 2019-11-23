@@ -12,8 +12,10 @@ TOKEN_FILE = '.token'
 
 def load_values(file):
     if os.path.exists(file):
-        encoded = pickle.load(open(file, 'rb'))
-        decoded = base64.b64decode( encoded)
+        with open(file, 'rb') as current_file:
+            encoded = pickle.load(current_file)
+
+        decoded = base64.b64decode(encoded)
         return str(decoded, encoding='utf-8')
 
 def get_value(value_type):

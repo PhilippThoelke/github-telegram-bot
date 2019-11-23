@@ -73,7 +73,12 @@ while True:
                 # the bot has already answered to this message
                 continue
 
-            message = current_result['message']
+            if 'message' in current_result:
+                message = current_result['message']
+            elif 'edited_message' in current_result:
+                message = current_result['edited_message']
+            else:
+                continue
             user_id = message['from']['id']
             chat_id = message['chat']['id']
 
@@ -120,10 +125,14 @@ while True:
                     if len(command) < 2:
                         send_message(chat_id, 'Please specify a repository to clone. You can list repositories with the /list command.')
                     else:
-                        clone_url = github.get_clone_url(command[1])
+                        repo = github.get_repo(command[1])
+                        clone_url = repo.clone_url
                         if clone_url is github.REPOSITORY_NOT_FOUND_ERR:
                             send_message(chat_id, f'Couldn\'t find the repository "{command[1]}".')
                         else:
+                            if repo.private:
+                                credentials = parser.get_value(parser.CREDENTIALS)
+                                username = github.get_username()
                             path = './' + command[1]
                             os.chdir(REPOSITORY_FOLDER)
                             if os.getcwd().split(os.sep)[-1] == REPOSITORY_FOLDER:
@@ -131,7 +140,14 @@ while True:
                                     send_message(chat_id, 'A clone of the requested repository is already present on the server. To update the repository use the /pull command.')
                                 else:
                                     send_message(chat_id, 'Cloning repository...')
-                                    os.system(f'git clone {clone_url}')
+                                    if repo.private:
+                                        if credentials is None or username is None:
+                                            send_message(chat_id, 'Missing GitHub credentials, needed to clone a private repository.')
+                                        else:
+                                            clone_url = clone_url[:8] + f'{username}:{credentials[1]}@' + clone_url[8:]
+                                            os.system(f'git clone {clone_url}')
+                                    else:
+                                        os.system(f'git clone {clone_url}')
                                     send_message(chat_id, 'Done!')
                             else:
                                 send_message(chat_id, 'Unable to find the cloning destination, please restart the server.')

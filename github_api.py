@@ -4,8 +4,6 @@ import pickle
 from github import Github
 import config_parser as parser
 
-CREDENTIALS_FILE = '.credentials'
-
 CREDENTIALS_FILE_MISSING_ERR = -1
 UNKNOWN_MODIFIER_ERR = -2
 REPOSITORY_NOT_FOUND_ERR = -3
@@ -44,8 +42,31 @@ def list_repos(modifier='public', session=None):
 def get_clone_url(name):
     g = start_session()
     if type(g) is not Github:
-        return g
+        return None
 
     if not name in list_repos(modifier='all', session=g):
         return REPOSITORY_NOT_FOUND_ERR
     return g.get_user().get_repo(name).clone_url
+
+def get_repo(name):
+    g = start_session()
+    if type(g) is not Github:
+        return None
+
+    i = 0
+    repos = g.get_user().get_repos().get_page(i)
+    while len(repos) > 0:
+        candidates = [curr for curr in repos if curr.name == name]
+        if len(candidates) > 0:
+            return candidates[0]
+
+        i += 1
+        repos = g.get_user().get_repos().get_page(i)
+
+    return REPOSITORY_NOT_FOUND_ERR
+
+def get_username():
+    g = start_session()
+    if type(g) is not Github:
+        return None
+    return g.get_user().login
