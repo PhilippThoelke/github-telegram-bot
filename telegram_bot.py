@@ -204,7 +204,7 @@ while True:
                         if len(paths) == 0:
                             send_message(chat_id, f'The file {command[2]} was not found in repository {command[1]}. You can list all python files with the command /listpython {command[1]}')
                         else:
-                            output_file = os.path.join(*paths[0].split(os.sep)[:-1] + ['output.zip'])
+                            output_file = os.path.join(*paths[0].split(os.sep)[:-1] + ['output.txt'])
                             os.system(f'python3 {paths[0]} 1> {output_file} 2>&1')
                             send_message(chat_id, f'Running file {command[2]}! You can check its output with /output {command[1]}')
                     else:
