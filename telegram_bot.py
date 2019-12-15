@@ -205,7 +205,7 @@ while True:
                             send_message(chat_id, f'The file {command[2]} was not found in repository {command[1]}. You can list all python files with the command /listpython {command[1]}')
                         else:
                             output_file = os.path.join(*paths[0].split(os.sep)[:-1] + ['output.txt'])
-                            os.system(f'python3 {paths[0]} 1> {output_file} 2>&1')
+                            os.system(f'python3 {paths[0]} 1> {output_file} 2>&1 &')
                             send_message(chat_id, f'Running file {command[2]}! You can check its output with /output {command[1]}')
                     else:
                         send_message(chat_id, 'Repository not installed. You can check installed repositories with the /installed command.')
