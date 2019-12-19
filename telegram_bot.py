@@ -221,7 +221,7 @@ while True:
                             send_message(chat_id, f'No output file found in repository {command[1]}')
                         else:
                             with open(path[0], 'r') as output_file:
-                                contents = '\n'.join(output_file.readlines())
+                                contents = ''.join(output_file.readlines())
                             send_message(chat_id, contents)
                     else:
                         send_message(chat_id, f'Repository {command[1]} not found. You can check installed repositories with the /installed command.')
