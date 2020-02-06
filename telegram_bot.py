@@ -7,7 +7,8 @@ import requests
 import github_api as github
 import config_parser as parser
 
-READ_DELAY = 3
+MAX_READ_DELAY = 10
+curr_read_delay = MAX_READ_DELAY
 
 META_FILE = '.meta'
 REPOSITORY_FOLDER = 'repositories'
@@ -242,4 +243,6 @@ while True:
             # prevents the bot from answering to messages more than once
             meta['last_message_id'] = current_result['update_id']
             update_meta_file(meta)
-    time.sleep(READ_DELAY)
+            curr_read_delay = 2
+    time.sleep(curr_read_delay)
+    curr_read_delay = min(MAX_READ_DELAY, curr_read_delay + 0.2)
